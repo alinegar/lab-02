@@ -16,13 +16,15 @@ int main(int argc, char const *argv[])
 	char socket_read_buffer[1024];
 	
 	// TODO: Fill out the server ip and port
-	std::string server_ip = "";
-	std::string server_port = "";
+	std::string server_ip = "127.0.0.1";
+	std::string server_port = "777";
 
 	int opt = 1;
 	int client_fd = -1;
 
 	// TODO: Create a TCP socket()
+
+    cliend_fd = socket(AF_UNIX, SOCK_STREAM, 0);  
 
 	// Enable reusing address and port
 	if (setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) { 
@@ -44,10 +46,40 @@ int main(int argc, char const *argv[])
 	getaddrinfo(server_ip.c_str(), server_port.c_str(), &hints, &server_addr);
 
 	// TODO: Connect() to the server (hint: you'll need to use server_addr)
-	// TODO: Retreive user input
-	// TODO: Send() the user input to the server
-	// TODO: Recieve any messages from the server and print it here. Don't forget to make sure the string is null terminated!
-	// TODO: Close() the socket
 
+    if (connect(client_fd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) {
+        
+        error("ERROR connecting");
+
+    }
+
+	// TODO: Retreive user input
+
+    int n;
+
+    std::cin >> socket_read_buffer; // maybe?
+
+	// TODO: Send() the user input to the server
+
+    n = send(client_fd,socket_read_buffer,strlen(socket_read_buffer), MSG_NOSIGNAL);
+    
+    if (n < 0) {
+
+        error("ERROR sending to socket");
+    }
+	// TODO: Recieve any messages from the server and print it here. Don't forget to make sure the string is null terminated!
+	
+    n = read(client_fd,socket_read_buffer,1023);
+    socket_read_buffer[1023] = '\0';
+   
+    if (n < 0) {
+
+        error("ERROR reading from socket");
+
+    }
+    
+    // TODO: Close() the socket
+    
+    close(sockfd);
 	return 0; 
 } 
