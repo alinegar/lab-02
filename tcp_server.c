@@ -18,7 +18,8 @@ void error(const char *msg)
 int main(int argc, char *argv[])
 {
     /* 1. What is argc and *argv[]?
-     *
+     *	argc = ./server
+     *	*argv[] = port number
      */
     int sockfd, newsockfd, portno;
     /* 2. What is a UNIX file descriptor and file descriptor table?
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
 
     struct sockaddr_in serv_addr, cli_addr;
     /* 3. What is a struct? What's the structure of sockaddr_in?
+     *	A struct is a list of data members for that specific class
      *
      */
     
@@ -39,7 +41,8 @@ int main(int argc, char *argv[])
     
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     /* 4. What are the input parameters and return value of socket()
-     *
+     *	the return value is an integer 
+     *	the parameters are also integers
      */
     
     if (sockfd < 0) 
@@ -54,7 +57,8 @@ int main(int argc, char *argv[])
              sizeof(serv_addr)) < 0) 
              error("ERROR on binding");
     /* 5. What are the input parameters of bind() and listen()?
-     *
+     *	int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+     *	int listen(int sockfd, int backlog);
      */
     
     listen(sockfd,5);
@@ -62,7 +66,8 @@ int main(int argc, char *argv[])
     
     while(1) {
         /* 6.  Why use while(1)? Based on the code below, what problems might occur if there are multiple simultaneous connections to handle?
-        *
+        *	We want it to keep running and checking if something has been recieved. If there are multiple connections to handel, there might 
+	* 	be packet losses in the recieving end. This is the case of polling but interrupts would be more efficent.
         */
         
 	char buffer[256];
